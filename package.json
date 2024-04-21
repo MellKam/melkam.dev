@@ -1,0 +1,16 @@
+{
+	"type": "module",
+	"scripts": {
+		"dev": "astro dev",
+		"start": "astro dev",
+		"build": "astro check && astro build",
+		"preview": "astro preview",
+		"astro": "astro"
+	},
+	"packageManager": "pnpm@9.0.4",
+	"dependencies": {
+		"astro": "^4.6.3",
+		"@astrojs/check": "^0.5.10",
+		"typescript": "^5.4.5"
+	}
+}
