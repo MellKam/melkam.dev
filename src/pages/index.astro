@@ -1,12 +1,77 @@
-<html lang="en">
+<html>
 	<head>
 		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
+		<title>melkam.dev</title>
+		<link
+			rel="preload"
+			href="/Switzer-Regular.woff2"
+			as="font"
+			type="font/woff2"
+			crossorigin="anonymous"
+		/>
+		<link
+			rel="preload"
+			href="/Switzer-Medium.woff2"
+			as="font"
+			type="font/woff2"
+			crossorigin="anonymous"
+		/>
+		<link rel="preload" href="/favicon.svg" as="image" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Hello World</title>
+		<style is:global>
+			@tailwind base;
+			@tailwind components;
+			@tailwind utilities;
+
+			:root {
+				color-scheme: light dark;
+			}
+
+			::selection {
+				color: light-dark(white, black);
+				background-color: light-dark(black, white);
+			}
+
+			* {
+				color: light-dark(black, white);
+				background-color: light-dark(white, black);
+			}
+
+			@font-face {
+				font-family: "Switzer";
+				src:
+					url("/Switzer-Regular.woff2") format("woff2"),
+					url("/Switzer-Regular.woff") format("woff");
+				font-weight: 400;
+				font-style: normal;
+				font-display: swap;
+			}
+
+			@font-face {
+				font-family: "Switzer";
+				src:
+					url("/Switzer-Medium.woff2") format("woff2"),
+					url("/Switzer-Medium.woff") format("woff");
+				font-weight: 500;
+				font-style: normal;
+				font-display: swap;
+			}
+		</style>
 	</head>
-	<body>
-		<h1>Hello World</h1>
+	<body class="min-h-dvh flex">
+		<div class="flex justify-center items-center flex-1">
+			<img
+				src="/favicon.svg"
+				class="xl:size-[9vw] size-[11vw] mr-[max(1vw,7px)] shrink-0 select-none"
+				alt="melkam logo"
+			/>
+			<h1
+				class="text-[10vw] xl:text-[8vw] tracking-tight font-medium text-center"
+			>
+				Artem Melnyk
+			</h1>
+		</div>
 	</body>
 </html>
