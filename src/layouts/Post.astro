@@ -1,0 +1,87 @@
+---
+import type { MarkdownHeading, MarkdownLayoutProps } from "astro";
+import Base from "./Base.astro";
+
+type Props = MarkdownLayoutProps<{
+	title: string;
+	description: string;
+	pubDate: string | Date;
+}>;
+
+const { frontmatter, headings } = Astro.props;
+
+const date = new Date(frontmatter.pubDate);
+const dateLabel = date.toLocaleDateString("en-GB", {
+	day: "numeric",
+	month: "long",
+	year: "numeric",
+});
+
+// Only top-level sections in the sidebar; deeper nesting adds noise.
+const toc: MarkdownHeading[] = headings.filter(
+	(h) => h.depth === 2 || h.depth === 3,
+);
+---
+
+<Base
+	title={`${frontmatter.title} — Artem Melnyk`}
+	description={frontmatter.description}
+	back={{ href: "/", label: "Artem Melnyk" }}
+>
+	<div class="mx-auto max-w-5xl px-6 sm:px-8">
+		<div class="lg:flex lg:gap-12">
+			<article class="min-w-0 flex-1 py-16 lg:max-w-[46rem]">
+				<header class="mb-12">
+					<time
+						datetime={date.toISOString().slice(0, 10)}
+						class="text-sm text-subtle"
+					>
+						{dateLabel}
+					</time>
+					<h1
+						class="mt-3 text-3xl font-medium tracking-tight text-balance sm:text-4xl"
+					>
+						{frontmatter.title}
+					</h1>
+					<p class="mt-4 text-lg text-muted text-pretty">
+						{frontmatter.description}
+					</p>
+				</header>
+
+				<div class="prose">
+					<slot />
+				</div>
+			</article>
+
+			{
+				toc.length > 0 && (
+					<aside class="hidden w-56 shrink-0 py-16 lg:block">
+						<nav
+							aria-label="On this page"
+							class="sticky top-8 max-h-[calc(100dvh-4rem)] overflow-y-auto text-sm"
+						>
+							<p class="mb-3 font-medium">On this page</p>
+							<ul class="space-y-2 border-l border-line">
+								{toc.map((heading) => (
+									<li>
+										<a
+											href={`#${heading.slug}`}
+											class:list={[
+												"block border-l -ml-px py-0.5 border-transparent text-muted transition-colors hover:border-fg hover:text-fg",
+												heading.depth === 2
+													? "pl-4"
+													: "pl-7",
+											]}
+										>
+											{heading.text}
+										</a>
+									</li>
+								))}
+							</ul>
+						</nav>
+					</aside>
+				)
+			}
+		</div>
+	</div>
+</Base>

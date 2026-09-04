@@ -1,0 +1,83 @@
+---
+import "../styles/global.css";
+
+interface Props {
+	title: string;
+	description?: string;
+	/** Rendered in the header next to the logo. Defaults to the site name. */
+	back?: { href: string; label: string };
+}
+
+const { title, description, back } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+		{description && <meta name="description" content={description} />}
+		<link rel="canonical" href={canonical} />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link
+			rel="preload"
+			href="/Switzer-Regular.woff2"
+			as="font"
+			type="font/woff2"
+			crossorigin="anonymous"
+		/>
+		<link
+			rel="preload"
+			href="/Switzer-Medium.woff2"
+			as="font"
+			type="font/woff2"
+			crossorigin="anonymous"
+		/>
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content={title} />
+		{description && <meta property="og:description" content={description} />}
+		<meta property="og:url" content={canonical} />
+	</head>
+	<body class="min-h-dvh flex flex-col">
+		<header class="border-b border-line">
+			<div
+				class="mx-auto flex h-14 max-w-5xl items-center gap-2 px-6 sm:px-8"
+			>
+				<a
+					href={back ? back.href : "/"}
+					class="group flex items-center gap-2 text-sm text-muted transition-colors hover:text-fg"
+				>
+					{
+						back ? (
+							<span aria-hidden="true">&larr;</span>
+						) : (
+							<img
+								src="/favicon.svg"
+								class="size-4 select-none"
+								alt=""
+								width="16"
+								height="16"
+							/>
+						)
+					}
+					<span>{back ? back.label : "Artem Melnyk"}</span>
+				</a>
+			</div>
+		</header>
+
+		<main class="flex-1">
+			<slot />
+		</main>
+
+		<footer class="border-t border-line">
+			<div
+				class="mx-auto flex max-w-5xl items-center justify-between px-6 py-6 text-sm text-subtle sm:px-8"
+			>
+				<span>Artem Melnyk</span>
+				<span>&copy; {new Date().getFullYear()}</span>
+			</div>
+		</footer>
+	</body>
+</html>

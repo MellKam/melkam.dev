@@ -1,77 +1,81 @@
-<html>
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<title>melkam.dev</title>
-		<link
-			rel="preload"
-			href="/Switzer-Regular.woff2"
-			as="font"
-			type="font/woff2"
-			crossorigin="anonymous"
-		/>
-		<link
-			rel="preload"
-			href="/Switzer-Medium.woff2"
-			as="font"
-			type="font/woff2"
-			crossorigin="anonymous"
-		/>
-		<link rel="preload" href="/favicon.svg" as="image" />
-		<meta name="generator" content={Astro.generator} />
-		<style is:global>
-			@tailwind base;
-			@tailwind components;
-			@tailwind utilities;
+---
+import Base from "../layouts/Base.astro";
 
-			:root {
-				color-scheme: light dark;
-			}
+interface PostFrontmatter {
+	title: string;
+	description: string;
+	pubDate: string;
+}
 
-			::selection {
-				color: light-dark(white, black);
-				background-color: light-dark(black, white);
-			}
+// Every markdown file in src/pages/blog/ is a post. Adding one is all it takes
+// to have it show up here.
+const posts = Object.values(
+	import.meta.glob<{ frontmatter: PostFrontmatter; url: string }>(
+		"./blog/*.md",
+		{ eager: true },
+	),
+).sort(
+	(a, b) =>
+		new Date(b.frontmatter.pubDate).valueOf() -
+		new Date(a.frontmatter.pubDate).valueOf(),
+);
+---
 
-			* {
-				color: light-dark(black, white);
-				background-color: light-dark(white, black);
-			}
-
-			@font-face {
-				font-family: "Switzer";
-				src:
-					url("/Switzer-Regular.woff2") format("woff2"),
-					url("/Switzer-Regular.woff") format("woff");
-				font-weight: 400;
-				font-style: normal;
-				font-display: swap;
-			}
-
-			@font-face {
-				font-family: "Switzer";
-				src:
-					url("/Switzer-Medium.woff2") format("woff2"),
-					url("/Switzer-Medium.woff") format("woff");
-				font-weight: 500;
-				font-style: normal;
-				font-display: swap;
-			}
-		</style>
-	</head>
-	<body class="min-h-dvh flex">
-		<div class="flex justify-center items-center flex-1">
+<Base
+	title="Artem Melnyk"
+	description="Notes on compilers, WebAssembly and language design."
+>
+	<div class="mx-auto max-w-5xl px-6 sm:px-8">
+		<section class="flex items-center gap-3 py-20 sm:py-28">
 			<img
 				src="/favicon.svg"
-				class="xl:size-[9vw] size-[11vw] mr-[max(1vw,7px)] shrink-0 select-none"
-				alt="melkam logo"
+				class="size-12 shrink-0 select-none sm:size-16"
+				alt=""
+				width="64"
+				height="64"
 			/>
 			<h1
-				class="text-[10vw] xl:text-[8vw] tracking-tight font-medium text-center"
+				class="text-4xl font-medium tracking-tight sm:text-6xl"
 			>
 				Artem Melnyk
 			</h1>
-		</div>
-	</body>
-</html>
+		</section>
+
+		<section class="pb-24">
+			<h2 class="text-sm font-medium text-subtle">Writing</h2>
+			<ul class="mt-6 border-t border-line">
+				{
+					posts.map((post) => (
+						<li class="border-b border-line">
+							<a
+								href={post.url}
+								class="group flex flex-col gap-1 py-6 sm:flex-row sm:items-baseline sm:gap-8"
+							>
+								<time
+									datetime={post.frontmatter.pubDate}
+									class="shrink-0 text-sm text-subtle tabular-nums sm:w-28"
+								>
+									{new Date(
+										post.frontmatter.pubDate,
+									).toLocaleDateString("en-GB", {
+										day: "numeric",
+										month: "short",
+										year: "numeric",
+									})}
+								</time>
+								<div class="min-w-0">
+									<h3 class="font-medium tracking-tight transition-colors group-hover:text-accent">
+										{post.frontmatter.title}
+									</h3>
+									<p class="mt-1 text-muted text-pretty">
+										{post.frontmatter.description}
+									</p>
+								</div>
+							</a>
+						</li>
+					))
+				}
+			</ul>
+		</section>
+	</div>
+</Base>
